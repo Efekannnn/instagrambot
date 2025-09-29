@@ -1,0 +1,47 @@
+# Industrial Defect Detection Configuration
+
+# Model settings
+model:
+  architecture: "yolov8"  # yolov8n, yolov8s, yolov8m, yolov8l
+  weights: "yolov8n.pt"  # pretrained weights or custom trained
+  confidence_threshold: 0.25
+  iou_threshold: 0.45
+  image_size: 640
+
+# Defect classes (customize based on your use case)
+classes:
+  - "scratch"
+  - "dent"
+  - "crack"
+  - "discoloration"
+  - "missing_part"
+  - "deformation"
+
+# Image processing settings
+preprocessing:
+  resize: [640, 640]
+  normalize: true
+  enhance_contrast: true
+  denoise: true
+  
+# Detection settings
+detection:
+  min_area: 100  # minimum defect area in pixels
+  max_area: 50000  # maximum defect area in pixels
+  edge_detection: true
+  morphological_operations: true
+
+# Visualization settings
+visualization:
+  show_confidence: true
+  show_labels: true
+  box_thickness: 2
+  font_scale: 0.6
+  save_results: true
+  output_dir: "output"
+
+# Performance settings
+performance:
+  use_gpu: true
+  batch_size: 8
+  num_workers: 4
