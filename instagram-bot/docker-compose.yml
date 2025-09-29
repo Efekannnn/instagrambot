@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  instagram-bot:
+    build: .
+    container_name: instagram-bot
+    environment:
+      - DISPLAY=:99
+      - INSTAGRAM_USERNAME=${INSTAGRAM_USERNAME}
+      - INSTAGRAM_PASSWORD=${INSTAGRAM_PASSWORD}
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config
+      - ./src:/app/src
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
