@@ -1,0 +1,6 @@
+instapy==0.6.16
+selenium==4.15.2
+pyvirtualdisplay==3.0
+python-dotenv==1.0.0
+schedule==1.2.0
+PyYAML==6.0.1

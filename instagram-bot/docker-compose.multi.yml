@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  # Bot 1
+  instagram-bot-1:
+    build: .
+    container_name: instagram-bot-1
+    environment:
+      - DISPLAY=:99
+      - INSTAGRAM_USERNAME=${BOT1_USERNAME}
+      - INSTAGRAM_PASSWORD=${BOT1_PASSWORD}
+      - PROXY_HOST=${BOT1_PROXY_HOST:-}
+      - PROXY_PORT=${BOT1_PROXY_PORT:-8080}
+      - PROXY_USERNAME=${BOT1_PROXY_USERNAME:-}
+      - PROXY_PASSWORD=${BOT1_PROXY_PASSWORD:-}
+    volumes:
+      - ./logs/bot1:/app/logs
+      - ./config:/app/config
+      - ./src:/app/src
+    restart: unless-stopped
+    networks:
+      - instagram-bot-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  # Bot 2
+  instagram-bot-2:
+    build: .
+    container_name: instagram-bot-2
+    environment:
+      - DISPLAY=:99
+      - INSTAGRAM_USERNAME=${BOT2_USERNAME}
+      - INSTAGRAM_PASSWORD=${BOT2_PASSWORD}
+      - PROXY_HOST=${BOT2_PROXY_HOST:-}
+      - PROXY_PORT=${BOT2_PROXY_PORT:-8080}
+      - PROXY_USERNAME=${BOT2_PROXY_USERNAME:-}
+      - PROXY_PASSWORD=${BOT2_PROXY_PASSWORD:-}
+    volumes:
+      - ./logs/bot2:/app/logs
+      - ./config:/app/config
+      - ./src:/app/src
+    restart: unless-stopped
+    networks:
+      - instagram-bot-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  # Bot 3
+  instagram-bot-3:
+    build: .
+    container_name: instagram-bot-3
+    environment:
+      - DISPLAY=:99
+      - INSTAGRAM_USERNAME=${BOT3_USERNAME}
+      - INSTAGRAM_PASSWORD=${BOT3_PASSWORD}
+      - PROXY_HOST=${BOT3_PROXY_HOST:-}
+      - PROXY_PORT=${BOT3_PROXY_PORT:-8080}
+      - PROXY_USERNAME=${BOT3_PROXY_USERNAME:-}
+      - PROXY_PASSWORD=${BOT3_PROXY_PASSWORD:-}
+    volumes:
+      - ./logs/bot3:/app/logs
+      - ./config:/app/config
+      - ./src:/app/src
+    restart: unless-stopped
+    networks:
+      - instagram-bot-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  # Multi-bot manager (optional - for coordinated runs)
+  multi-bot-manager:
+    build: .
+    container_name: multi-bot-manager
+    command: ["python", "src/multi_bot_manager.py"]
+    environment:
+      - DISPLAY=:99
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config
+      - ./src:/app/src
+      - ./.env.multi:/app/.env  # Separate env file for multi-bot
+    restart: unless-stopped
+    networks:
+      - instagram-bot-network
+    depends_on:
+      - instagram-bot-1
+      - instagram-bot-2
+      - instagram-bot-3
+
+networks:
+  instagram-bot-network:
+    driver: bridge
+
+# Volumes for persistent data
+volumes:
+  bot1_data:
+  bot2_data:
+  bot3_data:

@@ -1,0 +1,53 @@
+# Proxy List Configuration
+# Add your proxies here
+
+proxies:
+  # HTTP Proxy Example
+  - host: "proxy1.example.com"
+    port: 8080
+    protocol: "http"
+    username: ""
+    password: ""
+    country: "US"
+    type: "datacenter"
+  
+  # SOCKS5 Proxy Example
+  - host: "socks5.example.com"
+    port: 1080
+    protocol: "socks5"
+    username: "user"
+    password: "pass"
+    country: "UK"
+    type: "residential"
+  
+  # Residential Proxy Example
+  - host: "residential.proxy.com"
+    port: 8888
+    protocol: "http"
+    username: "customer"
+    password: "secret"
+    country: "US"
+    type: "residential"
+  
+  # Rotating Proxy Example
+  - host: "rotate.proxy.com"
+    port: 9999
+    protocol: "http"
+    username: "rotate_user"
+    password: "rotate_pass"
+    country: "DE"
+    type: "rotating"
+
+# Proxy providers reference:
+# - IPRoyal: https://iproyal.com
+# - Bright Data: https://brightdata.com
+# - SmartProxy: https://smartproxy.com
+# - Proxy-Seller: https://proxy-seller.com
+# - Webshare: https://webshare.io
+
+# Tips for choosing proxies:
+# 1. Residential proxies are safer but more expensive
+# 2. Datacenter proxies are cheaper but easier to detect
+# 3. Rotating proxies change IP on each request
+# 4. Use proxies from the same country as your target audience
+# 5. Test proxies before using them with Instagram

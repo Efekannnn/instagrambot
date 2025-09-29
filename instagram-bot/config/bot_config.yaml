@@ -1,0 +1,76 @@
+# Instagram Bot Configuration
+# Customize bot behavior by modifying these settings
+
+general:
+  headless_browser: true  # Run browser in headless mode (no GUI)
+  disable_image_load: true  # Don't load images to save bandwidth
+  want_check_browser: true  # Check browser version compatibility
+  split_db: true  # Split database for better performance
+
+# Proxy Configuration (optional)
+proxy:
+  enabled: false  # Set to true to use proxy
+  host: ""  # Proxy host (e.g., "proxy.example.com")
+  port: 8080  # Proxy port
+  protocol: "http"  # Protocol: http, https, socks5
+  username: ""  # Proxy username (if required)
+  password: ""  # Proxy password (if required)
+
+actions:
+  follow:
+    enabled: true
+    user_interact:
+      amount: 3  # Number of posts to interact with per user
+      randomize: true  # Randomize interactions
+      percentage: 80  # Percentage of users to interact with
+      media: "Photo"  # Media type to interact with
+
+  like:
+    enabled: true
+    by_tags:
+      tags:
+        - "programming"
+        - "coding"
+        - "developer"
+        - "tech"
+        - "software"
+      amount: 10  # Number of posts to like per tag
+      skip_top_posts: true  # Skip top posts to avoid spam detection
+      interact: true  # Interact with user after liking
+
+  comment:
+    enabled: false  # Disabled by default for safety
+    percentage: 10  # Percentage of posts to comment on
+    comments:
+      - "Great post! 👍"
+      - "Love this content!"
+      - "Amazing work!"
+      - "Keep it up! 🔥"
+      - "Inspiring!"
+
+  unfollow:
+    enabled: false
+    unfollow_after_days: 3  # Unfollow users after this many days
+
+limits:
+  # Daily limits to avoid detection
+  like_per_day: 100
+  follow_per_day: 30
+  unfollow_per_day: 30
+  comment_per_day: 10
+
+schedule:
+  enabled: false  # Set to true to enable scheduled runs
+  start_hour: 8  # Start time (24-hour format)
+  end_hour: 20  # End time (24-hour format)
+  run_duration_minutes: 30  # How long each run should last
+
+# Safety settings
+safety:
+  min_following_to_followers_ratio: 0.5
+  max_following_to_followers_ratio: 2.0
+  blacklist_words:
+    - "spam"
+    - "follow4follow"
+    - "f4f"
+  mandatory_words: []  # Posts must contain these words
