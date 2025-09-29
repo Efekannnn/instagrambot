@@ -7,6 +7,15 @@ general:
   want_check_browser: true  # Check browser version compatibility
   split_db: true  # Split database for better performance
 
+# Proxy Configuration (optional)
+proxy:
+  enabled: false  # Set to true to use proxy
+  host: ""  # Proxy host (e.g., "proxy.example.com")
+  port: 8080  # Proxy port
+  protocol: "http"  # Protocol: http, https, socks5
+  username: ""  # Proxy username (if required)
+  password: ""  # Proxy password (if required)
+
 actions:
   follow:
     enabled: true

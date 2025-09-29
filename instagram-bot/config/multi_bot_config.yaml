@@ -1,0 +1,74 @@
+# Multi-Bot Configuration
+# Manage multiple Instagram accounts with different settings
+
+general:
+  max_concurrent_bots: 3  # Maximum bots running at the same time
+  delay_between_starts: 60  # Seconds to wait between starting bots
+  use_threading: true  # Run bots concurrently (false for sequential)
+
+# Proxy configuration for all bots
+proxies:
+  enabled: false  # Set to true to use proxies
+  rotate: true   # Rotate proxies between accounts
+  list:
+    # HTTP Proxies
+    - host: "proxy1.example.com"
+      port: 8080
+      protocol: "http"
+      username: ""  # Leave empty if no auth required
+      password: ""
+    
+    # SOCKS5 Proxy
+    - host: "proxy2.example.com"
+      port: 1080
+      protocol: "socks5"
+      username: "user"
+      password: "pass"
+    
+    # Residential Proxy
+    - host: "residential.proxy.com"
+      port: 8888
+      protocol: "http"
+      username: "customer"
+      password: "secret"
+
+# Account configurations
+accounts:
+  # Account 1 - Default settings
+  - username: "account1"
+    password: "password1"
+    config_path: "config/bot_config.yaml"  # Uses default config
+    schedule:
+      enabled: false
+      times: ["09:00", "15:00", "21:00"]
+  
+  # Account 2 - Custom settings
+  - username: "account2"
+    password: "password2"
+    config_path: "config/account2_config.yaml"  # Custom config file
+    schedule:
+      enabled: false
+      times: ["10:00", "16:00", "22:00"]
+    # Account-specific proxy (overrides general proxy settings)
+    proxy:
+      host: "dedicated.proxy.com"
+      port: 3128
+      protocol: "http"
+      username: "acc2"
+      password: "pass2"
+  
+  # Account 3 - Minimal settings
+  - username: "account3"
+    password: "password3"
+    schedule:
+      enabled: false
+      times: ["11:00", "17:00"]
+
+# Example with more accounts (uncomment to use)
+# - username: "account4"
+#   password: "password4"
+#   config_path: "config/conservative_config.yaml"
+#
+# - username: "account5"
+#   password: "password5"
+#   config_path: "config/aggressive_config.yaml"

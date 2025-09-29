@@ -1,25 +1,19 @@
 #!/usr/bin/env python3
 """
-Instagram Bot using InstaPy
-Main bot logic and execution
+Instagram Bot using InstaPy with Proxy Support
+Enhanced bot with proxy configuration
 """
 
 import os
 import sys
 import time
 import logging
+import random
 from datetime import datetime
 from dotenv import load_dotenv
 from instapy import InstaPy
 from instapy.util import smart_run
 import yaml
-
-# Try to import enhanced version with proxy support
-try:
-    from bot_with_proxy import InstagramBotWithProxy
-    PROXY_SUPPORT = True
-except ImportError:
-    PROXY_SUPPORT = False
 
 # Load environment variables
 load_dotenv()
@@ -36,13 +30,37 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class InstagramBot:
-    """Instagram bot with configurable actions"""
+class ProxyManager:
+    """Manage proxy rotation and validation"""
     
-    def __init__(self, username, password, config_path='config/bot_config.yaml'):
+    def __init__(self, proxies):
+        self.proxies = proxies
+        self.current_proxy_index = 0
+    
+    def get_next_proxy(self):
+        """Get next proxy in rotation"""
+        if not self.proxies:
+            return None
+        
+        proxy = self.proxies[self.current_proxy_index]
+        self.current_proxy_index = (self.current_proxy_index + 1) % len(self.proxies)
+        return proxy
+    
+    def get_random_proxy(self):
+        """Get random proxy from list"""
+        if not self.proxies:
+            return None
+        return random.choice(self.proxies)
+
+
+class InstagramBotWithProxy:
+    """Instagram bot with proxy support"""
+    
+    def __init__(self, username, password, config_path='config/bot_config.yaml', proxy=None):
         self.username = username
         self.password = password
         self.config = self.load_config(config_path)
+        self.proxy = proxy or self.get_proxy_from_config()
         self.session = None
         
     def load_config(self, config_path):
@@ -56,14 +74,63 @@ class InstagramBot:
             logger.warning(f"Config file not found at {config_path}, using defaults")
             return self.get_default_config()
     
+    def get_proxy_from_config(self):
+        """Get proxy from configuration or environment"""
+        proxy_config = self.config.get('proxy', {})
+        
+        # Check environment variables first
+        if os.getenv('PROXY_HOST'):
+            return {
+                'http': f"{os.getenv('PROXY_PROTOCOL', 'http')}://{os.getenv('PROXY_USERNAME', '')}:{os.getenv('PROXY_PASSWORD', '')}@{os.getenv('PROXY_HOST')}:{os.getenv('PROXY_PORT', '8080')}",
+                'https': f"{os.getenv('PROXY_PROTOCOL', 'http')}://{os.getenv('PROXY_USERNAME', '')}:{os.getenv('PROXY_PASSWORD', '')}@{os.getenv('PROXY_HOST')}:{os.getenv('PROXY_PORT', '8080')}"
+            }
+        
+        # Use config file proxy
+        if proxy_config.get('enabled', False):
+            proxy_url = self.build_proxy_url(proxy_config)
+            if proxy_url:
+                return {
+                    'http': proxy_url,
+                    'https': proxy_url
+                }
+        
+        return None
+    
+    def build_proxy_url(self, proxy_config):
+        """Build proxy URL from configuration"""
+        host = proxy_config.get('host')
+        port = proxy_config.get('port')
+        
+        if not host:
+            return None
+        
+        protocol = proxy_config.get('protocol', 'http')
+        username = proxy_config.get('username', '')
+        password = proxy_config.get('password', '')
+        
+        if username and password:
+            return f"{protocol}://{username}:{password}@{host}:{port}"
+        else:
+            return f"{protocol}://{host}:{port}"
+    
     def get_default_config(self):
-        """Return default bot configuration"""
-        return {
+        """Return default bot configuration with proxy settings"""
+        config = {
             'general': {
                 'headless_browser': True,
                 'disable_image_load': True,
                 'want_check_browser': True,
-                'split_db': True
+                'split_db': True,
+                'multi_logs': True
+            },
+            'proxy': {
+                'enabled': False,
+                'host': '',
+                'port': 8080,
+                'protocol': 'http',
+                'username': '',
+                'password': '',
+                'rotate': False
             },
             'actions': {
                 'follow': {
@@ -107,22 +174,35 @@ class InstagramBot:
                 'run_duration_minutes': 30
             }
         }
+        return config
     
     def create_session(self):
-        """Create and configure InstaPy session"""
+        """Create and configure InstaPy session with proxy"""
         logger.info("Creating InstaPy session...")
+        
+        if self.proxy:
+            logger.info(f"Using proxy: {self.proxy.get('http', 'Not configured')}")
         
         general_config = self.config.get('general', {})
         
-        self.session = InstaPy(
-            username=self.username,
-            password=self.password,
-            headless_browser=general_config.get('headless_browser', True),
-            disable_image_load=general_config.get('disable_image_load', True),
-            want_check_browser=general_config.get('want_check_browser', True),
-            split_db=general_config.get('split_db', True),
-            log_location='/app/logs/'
-        )
+        # Create session with proxy if available
+        session_params = {
+            'username': self.username,
+            'password': self.password,
+            'headless_browser': general_config.get('headless_browser', True),
+            'disable_image_load': general_config.get('disable_image_load', True),
+            'want_check_browser': general_config.get('want_check_browser', True),
+            'split_db': general_config.get('split_db', True),
+            'multi_logs': general_config.get('multi_logs', True),
+            'log_location': f'/app/logs/{self.username}/'
+        }
+        
+        # Add proxy if configured
+        if self.proxy:
+            session_params['proxy_address'] = self.proxy.get('http', '').replace('http://', '').replace('https://', '')
+            session_params['proxy_port'] = 0  # Port is included in proxy_address
+        
+        self.session = InstaPy(**session_params)
         
         # Set up limits
         limits = self.config.get('limits', {})
@@ -212,7 +292,7 @@ class InstagramBot:
             self.create_session()
             
             with smart_run(self.session):
-                logger.info("Bot started successfully")
+                logger.info(f"Bot started successfully for user: {self.username}")
                 self.run_actions()
                 logger.info("Bot actions completed")
                 
@@ -226,7 +306,7 @@ class InstagramBot:
 
 
 def main():
-    """Main entry point"""
+    """Main entry point with proxy support"""
     # Get credentials from environment
     username = os.getenv('INSTAGRAM_USERNAME')
     password = os.getenv('INSTAGRAM_PASSWORD')
@@ -251,7 +331,7 @@ def main():
         
         def job():
             logger.info("Starting scheduled bot run")
-            bot = InstagramBot(username, password)
+            bot = InstagramBotWithProxy(username, password)
             bot.run()
             logger.info("Scheduled bot run completed")
         
@@ -272,14 +352,7 @@ def main():
     else:
         # Run once
         logger.info("Running bot once")
-        
-        # Check if proxy is configured
-        if PROXY_SUPPORT and (os.getenv('PROXY_HOST') or 'proxy' in config):
-            logger.info("Using proxy-enabled bot")
-            bot = InstagramBotWithProxy(username, password)
-        else:
-            bot = InstagramBot(username, password)
-        
+        bot = InstagramBotWithProxy(username, password)
         bot.run()
 
 

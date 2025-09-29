@@ -1,0 +1,73 @@
+# Aggressive Bot Configuration
+# Higher risk settings for test accounts or aggressive growth
+# ⚠️ USE WITH CAUTION - Higher risk of detection
+
+general:
+  headless_browser: true
+  disable_image_load: true
+  want_check_browser: true
+  split_db: true
+  multi_logs: true
+
+proxy:
+  enabled: true  # Highly recommended for aggressive settings
+  host: ""
+  port: 8080
+  protocol: "http"
+  username: ""
+  password: ""
+
+actions:
+  follow:
+    enabled: true
+    user_interact:
+      amount: 5
+      randomize: true
+      percentage: 90
+      media: "Photo"
+
+  like:
+    enabled: true
+    by_tags:
+      tags:
+        - "instagram"
+        - "instagood"
+        - "photooftheday"
+        - "fashion"
+        - "beautiful"
+      amount: 20  # Higher amount per tag
+      skip_top_posts: true
+      interact: true
+
+  comment:
+    enabled: true
+    percentage: 15
+    comments:
+      - "Amazing! {😍|🔥|💯}"
+      - "{Love|Really love} this!"
+      - "So {cool|awesome|great}!"
+      - "{Beautiful|Stunning} shot!"
+      - "Keep it up! {💪|👏|✨}"
+
+  unfollow:
+    enabled: true
+    unfollow_after_days: 2
+
+# Aggressive limits (still within Instagram's suspected limits)
+limits:
+  like_per_day: 200
+  follow_per_day: 50
+  unfollow_per_day: 50
+  comment_per_day: 20
+
+schedule:
+  enabled: true
+  start_hour: 7
+  end_hour: 23
+  run_duration_minutes: 45
+
+safety:
+  min_following_to_followers_ratio: 0.3
+  max_following_to_followers_ratio: 3.0
+  blacklist_words:
+    - "spam"

@@ -1,0 +1,64 @@
+# Conservative Bot Configuration
+# Safe settings for new or valuable accounts
+
+general:
+  headless_browser: true
+  disable_image_load: true
+  want_check_browser: true
+  split_db: true
+  multi_logs: true
+
+proxy:
+  enabled: false  # Enable if using proxy
+  host: ""
+  port: 8080
+  protocol: "http"
+  username: ""
+  password: ""
+
+actions:
+  follow:
+    enabled: true
+    user_interact:
+      amount: 2  # Very conservative
+      randomize: true
+      percentage: 70
+      media: "Photo"
+
+  like:
+    enabled: true
+    by_tags:
+      tags:
+        - "nature"
+        - "photography"
+        - "travel"
+      amount: 5  # Very low amount per tag
+      skip_top_posts: true
+      interact: true
+
+  comment:
+    enabled: false  # Disabled for safety
+
+  unfollow:
+    enabled: false
+
+# Very conservative limits
+limits:
+  like_per_day: 50
+  follow_per_day: 10
+  unfollow_per_day: 10
+  comment_per_day: 5
+
+schedule:
+  enabled: true
+  start_hour: 9
+  end_hour: 21
+  run_duration_minutes: 20
+
+safety:
+  min_following_to_followers_ratio: 0.5
+  max_following_to_followers_ratio: 1.5
+  blacklist_words:
+    - "spam"
+    - "follow4follow"
+    - "f4f"
