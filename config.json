@@ -1,0 +1,22 @@
+{
+  "proxies": [
+    "http://username:password@proxy1.example.com:8080",
+    "http://username:password@proxy2.example.com:8080",
+    "socks5://username:password@proxy3.example.com:1080",
+    "http://username:password@proxy4.example.com:8080",
+    "http://username:password@proxy5.example.com:8080",
+    "http://username:password@proxy6.example.com:8080",
+    "http://username:password@proxy7.example.com:8080",
+    "http://username:password@proxy8.example.com:8080",
+    "http://username:password@proxy9.example.com:8080",
+    "http://username:password@proxy10.example.com:8080"
+  ],
+  "settings": {
+    "account_count": 10,
+    "min_wait": 30,
+    "max_wait": 60,
+    "headless": false,
+    "save_screenshots": true,
+    "email_domain": "@gmail.com"
+  }
+}
