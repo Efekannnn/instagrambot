@@ -4,11 +4,12 @@
 
 | İhtiyacınız | Dosya |
 |-------------|-------|
-| **Hemen başlamak istiyorum!** | → `README_SQLITE.md` |
-| **Adım adım kurulum** | → `DEPLOYMENT_CHECKLIST.md` |
-| **Detaylı kurulum rehberi** | → `SQLITE_SETUP_GUIDE.md` |
-| **Database oluştur** | → `npm run init` |
-| **Workflow import et** | → `turkish_learning_bot_sqlite.json` |
+| **n8n'de MySQL var** ⭐ | → `README_MYSQL.md` |
+| **n8n'de SQLite var** | → `README_SQLITE.md` |
+| **Adım adım kurulum** | → `DEPLOYMENT_CHECKLIST.md` veya `MYSQL_SETUP_GUIDE.md` |
+| **Detaylı rehber (MySQL)** | → `MYSQL_SETUP_GUIDE.md` |
+| **Detaylı rehber (SQLite)** | → `SQLITE_SETUP_GUIDE.md` |
+| **Workflow import** | → `turkish_learning_bot_mysql.json` veya `turkish_learning_bot_sqlite.json` |
 
 ---
 

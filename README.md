@@ -2,10 +2,11 @@
 
 Telegram üzerinden çalışan, yapay zeka destekli, akıllı tekrar sistemi (spaced repetition) ile Türkçe kelime öğrenme botu.
 
-![Version](https://img.shields.io/badge/version-2.0-blue)
+![Version](https://img.shields.io/badge/version-4.0-blue)
 ![Platform](https://img.shields.io/badge/platform-n8n-orange)
 ![Language](https://img.shields.io/badge/language-Turkish-red)
-![Status](https://img.shields.io/badge/status-ready-green)
+![Status](https://img.shields.io/badge/status-production--ready-green)
+![Database](https://img.shields.io/badge/database-MySQL%20%7C%20SQLite-brightgreen)
 
 ---
 
@@ -41,14 +42,48 @@ Telegram üzerinden çalışan, yapay zeka destekli, akıllı tekrar sistemi (sp
 
 ## 🚀 Hızlı Başlangıç
 
+### ⚡ n8n'de Hangi Database Var?
+
+#### MySQL Varsa (Önerilen) ⭐
+```
+📖 README_MYSQL.md → Hızlı kurulum (10 dk)
+📖 QUICK_START_MYSQL.md → 3 adımda çalıştır
+📄 turkish_learning_bot_mysql.json → Import et
+```
+
+#### SQLite Varsa
+```
+📖 README_SQLITE.md → Hızlı kurulum (5 dk)
+📄 turkish_learning_bot_sqlite.json → Import et
+```
+
+#### İkisi de Yoksa (Google Sheets - Eski)
+```
+⚠️ API limiti var (önerilmez)
+📖 GOOGLE_SHEETS_SETUP.md
+📄 improved_language_learning_workflow_v2.json
+```
+
+---
+
+## 📊 Versiyon Karşılaştırması
+
+| Versiyon | Database | API Limit | Hız | Durum |
+|----------|----------|-----------|-----|-------|
+| v4.0 | MySQL | ✅ Yok | 100x | ⭐ Önerilen |
+| v3.0 | SQLite | ✅ Yok | 100x | ✅ İyi |
+| v2.0 | Sheets | ❌ Var | Yavaş | 🔴 Eski |
+| v1.0 | Sheets | ❌ Var | Yavaş | 🔴 Eski |
+
+---
+
+## 🎯 MySQL Kurulumu (Önerilen)
+
 ### Önkoşullar
 
-1. **n8n** hesabı (self-hosted veya cloud)
-2. **Telegram Bot** token'ı
-3. **Google Sheets** hesabı
-4. **Google Sheets API** credentials
-
-### Kurulum (5 Dakika)
+1. **n8n** (MySQL node ile)
+2. **Telegram Bot** token
+3. **MySQL** veya cloud (PlanetScale, Railway)
 
 #### 1️⃣ Google Sheets Hazırlığı
 
