@@ -1,0 +1,875 @@
+{
+  "name": "Advanced Turkish Language Learning Bot v2",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🎓 Advanced Turkish Language Learning Bot v2\n\n### Fixed Issues:\n- ✅ New user auto-registration\n- ✅ Quiz works from first use\n- ✅ No database dependency for first question\n\n### Features:\n- 📊 Progress Tracking\n- 🔄 Spaced Repetition\n- 🎯 Multiple Exercise Types\n- 📈 Statistics & Reports\n- 🔥 Streak Tracking\n- ⚙️ User Settings",
+        "height": 680,
+        "width": 420
+      },
+      "id": "sticky-note-info",
+      "name": "Bot Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [2600, 80],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [240, 400],
+      "webhookId": "88179da7-9927-4bdc-8bd7-78022810b48e",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/stats",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "stats"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/settings",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "settings"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/streak",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "streak"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/reset",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "reset"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "help"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/quiz",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "quiz"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [460, 400],
+      "id": "command-router",
+      "name": "Command Router"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=🎓 Welcome {{ $('Telegram Trigger').item.json.message.chat.first_name }}!\n\nI'm your Turkish language tutor! 🇹🇷\n\n📚 **Available Commands:**\n/quiz - Start a new quiz\n/stats - View your progress\n/settings - Adjust your preferences\n/streak - Check your learning streak 🔥\n/reset - Reset your progress\n/help - Show this help message\n\n✨ **Features:**\n✅ Multiple exercise types\n✅ Spaced repetition learning\n✅ Progress tracking\n✅ Personalized difficulty\n\nType /quiz to start learning! 🚀",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 180],
+      "id": "send-welcome",
+      "name": "Send Welcome Message"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "S",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "get-vocabulary",
+      "name": "Get Vocabulary List",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [720, 340],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "WordHistory",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "userId",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {
+          "sortOrder": [
+            {
+              "column": "lastSeen",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "id": "get-word-history",
+      "name": "Get Word History",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [940, 340],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "jsCode": "// Smart Question Generator with Spaced Repetition (v2 - Fixed for new users)\nconst vocabulary = $input.item(0).json;\nconst wordHistoryItems = $input.item(1)?.json || [];\nconst userId = $('Telegram Trigger').item.json.message.chat.id;\nconst userName = $('Telegram Trigger').item.json.message.chat.first_name;\n\n// Create word history map for quick lookup\nconst historyMap = {};\nif (Array.isArray(wordHistoryItems)) {\n  wordHistoryItems.forEach(record => {\n    historyMap[record.englishWord] = {\n      correct: parseInt(record.correct) || 0,\n      incorrect: parseInt(record.incorrect) || 0,\n      lastSeen: record.lastSeen || null,\n      streak: parseInt(record.streak) || 0\n    };\n  });\n}\n\n// Calculate priority score for each word (higher = more priority)\nconst scoredWords = vocabulary.map(word => {\n  const history = historyMap[word.initialText] || { correct: 0, incorrect: 0, lastSeen: null, streak: 0 };\n  \n  let score = 100; // Base score\n  \n  // Factor 1: Never seen words get high priority\n  if (!history.lastSeen) {\n    score += 50;\n  }\n  \n  // Factor 2: Incorrect answers increase priority\n  score += history.incorrect * 30;\n  \n  // Factor 3: Low streak words get more priority\n  if (history.streak < 3) {\n    score += (3 - history.streak) * 20;\n  }\n  \n  // Factor 4: Time since last seen (more time = higher priority)\n  if (history.lastSeen) {\n    const daysSince = (Date.now() - new Date(history.lastSeen).getTime()) / (1000 * 60 * 60 * 24);\n    if (daysSince < 1) score -= 40; // Seen today? Lower priority\n    else if (daysSince < 3) score -= 20; // Seen in last 3 days? Moderate penalty\n    else score += daysSince * 5; // Older = higher priority\n  }\n  \n  // Factor 5: Success rate (lower = higher priority)\n  const total = history.correct + history.incorrect;\n  if (total > 0) {\n    const successRate = history.correct / total;\n    score += (1 - successRate) * 40;\n  }\n  \n  return {\n    ...word,\n    score: score,\n    history: history\n  };\n});\n\n// Sort by score (descending) and pick from top 20%\nscorredWords.sort((a, b) => b.score - a.score);\nconst topWords = scorredWords.slice(0, Math.max(5, Math.floor(scorredWords.length * 0.2)));\n\n// Randomly select from top priority words\nconst selectedWord = topWords[Math.floor(Math.random() * topWords.length)];\n\n// Select 3 random incorrect options\nconst incorrectOptions = vocabulary\n  .filter(w => w.translatedText !== selectedWord.translatedText)\n  .sort(() => Math.random() - 0.5)\n  .slice(0, 3)\n  .map(w => w.translatedText);\n\n// Combine and shuffle all options\nconst allOptions = [...incorrectOptions, selectedWord.translatedText];\nconst shuffledOptions = allOptions.sort(() => Math.random() - 0.5);\n\n// Find correct answer index\nconst correctIndex = shuffledOptions.indexOf(selectedWord.translatedText);\nconst correctLetter = ['A', 'B', 'C', 'D'][correctIndex];\n\n// Determine exercise type (randomize for variety)\nconst exerciseTypes = ['mcq_en_to_tr', 'mcq_tr_to_en'];\nconst exerciseType = exerciseTypes[Math.floor(Math.random() * exerciseTypes.length)];\n\nlet questionText, options;\n\nif (exerciseType === 'mcq_en_to_tr') {\n  // English to Turkish\n  questionText = `What is the correct Turkish translation for \"${selectedWord.initialText}\"?`;\n  options = shuffledOptions;\n} else {\n  // Turkish to English (reverse)\n  const incorrectEnOptions = vocabulary\n    .filter(w => w.initialText !== selectedWord.initialText)\n    .sort(() => Math.random() - 0.5)\n    .slice(0, 3)\n    .map(w => w.initialText);\n  \n  const allEnOptions = [...incorrectEnOptions, selectedWord.initialText];\n  const shuffledEnOptions = allEnOptions.sort(() => Math.random() - 0.5);\n  const correctEnIndex = shuffledEnOptions.indexOf(selectedWord.initialText);\n  const correctEnLetter = ['A', 'B', 'C', 'D'][correctEnIndex];\n  \n  questionText = `What is the correct English translation for \"${selectedWord.translatedText}\"?`;\n  options = shuffledEnOptions;\n  \n  return [{\n    json: {\n      userId: userId,\n      userName: userName,\n      question: questionText,\n      options: options,\n      correctAnswer: correctEnLetter,\n      correctWord: selectedWord.initialText,\n      turkishWord: selectedWord.translatedText,\n      englishWord: selectedWord.initialText,\n      exerciseType: exerciseType,\n      wordScore: selectedWord.score,\n      wordHistory: selectedWord.history,\n      formattedQuestion: `${questionText}\\n\\nA) ${options[0]}\\nB) ${options[1]}\\nC) ${options[2]}\\nD) ${options[3]}\\n\\nReply with A, B, C, or D`\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    userId: userId,\n    userName: userName,\n    question: questionText,\n    options: options,\n    correctAnswer: correctLetter,\n    correctWord: selectedWord.translatedText,\n    turkishWord: selectedWord.translatedText,\n    englishWord: selectedWord.initialText,\n    exerciseType: exerciseType,\n    wordScore: selectedWord.score,\n    wordHistory: selectedWord.history,\n    formattedQuestion: `${questionText}\\n\\nA) ${options[0]}\\nB) ${options[1]}\\nC) ${options[2]}\\nD) ${options[3]}\\n\\nReply with A, B, C, or D`\n  }\n}];"
+      },
+      "id": "smart-question-generator",
+      "name": "Smart Question Generator",
+      "type": "n8n-nodes-base.code",
+      "position": [1160, 340],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.formattedQuestion }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1380, 340],
+      "id": "send-question",
+      "name": "Send Question"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "CurrentQuestion",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userId": "={{ $json.userId }}",
+            "question": "={{ $json.question }}",
+            "correctAnswer": "={{ $json.correctAnswer }}",
+            "correctWord": "={{ $json.correctWord }}",
+            "turkishWord": "={{ $json.turkishWord }}",
+            "englishWord": "={{ $json.englishWord }}",
+            "exerciseType": "={{ $json.exerciseType }}",
+            "timestamp": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": ["userId"],
+          "schema": [
+            { "id": "userId", "displayName": "userId", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "question", "displayName": "question", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "correctAnswer", "displayName": "correctAnswer", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "correctWord", "displayName": "correctWord", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "turkishWord", "displayName": "turkishWord", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "englishWord", "displayName": "englishWord", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "exerciseType", "displayName": "exerciseType", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "timestamp", "displayName": "timestamp", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false }
+          ]
+        },
+        "options": {}
+      },
+      "id": "save-current-question",
+      "name": "Save Current Question",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [1380, 540],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "CurrentQuestion",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "userId",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-current-question",
+      "name": "Get Current Question",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [720, 620],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "jsCode": "// Answer Validation and Feedback Generation\nconst userAnswer = $('Telegram Trigger').item.json.message.text.toUpperCase().trim();\nconst currentQuestionData = $input.all();\nconst userId = $('Telegram Trigger').item.json.message.chat.id;\nconst userName = $('Telegram Trigger').item.json.message.chat.first_name;\n\n// Check if there's a current question\nif (!currentQuestionData || currentQuestionData.length === 0) {\n  return [{\n    json: {\n      isValid: false,\n      feedbackMessage: \"⚠️ No active question found!\\n\\nPlease type /quiz to start a new question.\"\n    }\n  }];\n}\n\nconst currentQuestion = currentQuestionData[0].json;\n\n// Validate answer format\nif (!['A', 'B', 'C', 'D'].includes(userAnswer)) {\n  return [{\n    json: {\n      isValid: false,\n      feedbackMessage: \"⚠️ Please answer with A, B, C, or D\\n\\nTry again!\"\n    }\n  }];\n}\n\nconst isCorrect = userAnswer === currentQuestion.correctAnswer;\nconst turkishWord = currentQuestion.turkishWord;\nconst englishWord = currentQuestion.englishWord;\n\nlet feedbackMessage;\nlet emoji;\n\nif (isCorrect) {\n  const encouragements = [\n    \"Excellent! 🎉\",\n    \"Perfect! 🌟\",\n    \"Great job! ✨\",\n    \"Amazing! 🎊\",\n    \"Well done! 👏\",\n    \"Fantastic! 🚀\",\n    \"Brilliant! 💫\"\n  ];\n  emoji = encouragements[Math.floor(Math.random() * encouragements.length)];\n  feedbackMessage = `${emoji}\\n\\n✅ ${turkishWord} = ${englishWord}\\n\\nType /quiz for next question!`;\n} else {\n  emoji = \"Not quite! 😅\";\n  feedbackMessage = `${emoji}\\n\\n❌ The correct answer was: ${currentQuestion.correctAnswer}\\n\\n📚 ${turkishWord} = ${englishWord}\\n\\nDon't worry, you'll get it next time! Type /quiz to continue.`;\n}\n\nreturn [{\n  json: {\n    isValid: true,\n    isCorrect: isCorrect,\n    feedbackMessage: feedbackMessage,\n    userId: userId,\n    userName: userName,\n    word: englishWord,\n    englishWord: englishWord,\n    turkishWord: turkishWord,\n    userAnswer: userAnswer,\n    correctAnswer: currentQuestion.correctAnswer,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "validate-answer",
+      "name": "Validate Answer",
+      "type": "n8n-nodes-base.code",
+      "position": [940, 620],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.feedbackMessage }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1160, 620],
+      "id": "send-feedback",
+      "name": "Send Feedback"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Update Word History with proper increment logic\nconst data = $input.first().json;\n\nif (!data.isValid || !data.isCorrect === undefined) {\n  // Skip update for invalid inputs\n  return [];\n}\n\nconst userId = data.userId;\nconst englishWord = data.englishWord;\nconst turkishWord = data.turkishWord;\nconst isCorrect = data.isCorrect;\n\n// Get existing word history for this user and word\nconst sheets = $('Get Word History For Update');\nlet existingRecord = null;\n\ntry {\n  const allRecords = sheets.all();\n  existingRecord = allRecords.find(item => \n    item.json.userId == userId && item.json.word == englishWord\n  );\n} catch (e) {\n  // No existing record\n}\n\nlet correct = isCorrect ? 1 : 0;\nlet incorrect = isCorrect ? 0 : 1;\nlet streak = isCorrect ? 1 : 0;\n\n// If existing record found, increment values\nif (existingRecord) {\n  correct = (parseInt(existingRecord.json.correct) || 0) + (isCorrect ? 1 : 0);\n  incorrect = (parseInt(existingRecord.json.incorrect) || 0) + (isCorrect ? 0 : 1);\n  \n  if (isCorrect) {\n    streak = (parseInt(existingRecord.json.streak) || 0) + 1;\n  } else {\n    streak = 0;\n  }\n}\n\nreturn [{\n  json: {\n    userId: userId,\n    word: englishWord,\n    englishWord: englishWord,\n    turkishWord: turkishWord,\n    correct: correct,\n    incorrect: incorrect,\n    lastSeen: data.timestamp,\n    streak: streak\n  }\n}];"
+      },
+      "id": "prepare-word-history-update",
+      "name": "Prepare Word History Update",
+      "type": "n8n-nodes-base.code",
+      "position": [1380, 820],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "WordHistory",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "userId",
+              "lookupValue": "={{ $('Validate Answer').item.json.userId }}"
+            },
+            {
+              "lookupColumn": "word",
+              "lookupValue": "={{ $('Validate Answer').item.json.word }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-word-history-for-update",
+      "name": "Get Word History For Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [1160, 820],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "WordHistory",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userId": "={{ $json.userId }}",
+            "word": "={{ $json.word }}",
+            "englishWord": "={{ $json.englishWord }}",
+            "turkishWord": "={{ $json.turkishWord }}",
+            "correct": "={{ $json.correct }}",
+            "incorrect": "={{ $json.incorrect }}",
+            "lastSeen": "={{ $json.lastSeen }}",
+            "streak": "={{ $json.streak }}"
+          },
+          "matchingColumns": ["userId", "word"],
+          "schema": [
+            { "id": "userId", "displayName": "userId", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "word", "displayName": "word", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "englishWord", "displayName": "englishWord", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "turkishWord", "displayName": "turkishWord", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "correct", "displayName": "correct", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false },
+            { "id": "incorrect", "displayName": "incorrect", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false },
+            { "id": "lastSeen", "displayName": "lastSeen", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "streak", "displayName": "streak", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false }
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-word-history",
+      "name": "Update Word History",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [1600, 820],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "UserProgress",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "userId",
+              "lookupValue": "={{ $('Validate Answer').item.json.userId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-user-progress-for-update",
+      "name": "Get User Progress For Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [1160, 1020],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "jsCode": "// Update User Progress with proper increment logic\nconst data = $input.item(0).json;\n\nif (!data.isValid || data.isCorrect === undefined) {\n  // Skip update for invalid inputs\n  return [];\n}\n\nconst userId = data.userId;\nconst userName = data.userName;\nconst isCorrect = data.isCorrect;\n\n// Get existing user progress\nconst progressData = $input.item(1);\nlet existingProgress = null;\n\ntry {\n  if (progressData && progressData.json) {\n    existingProgress = progressData.json;\n  }\n} catch (e) {\n  // No existing progress\n}\n\nlet totalQuestions = 1;\nlet correctAnswers = isCorrect ? 1 : 0;\nlet incorrectAnswers = isCorrect ? 0 : 1;\nlet currentStreak = isCorrect ? 1 : 0;\n\n// If existing progress found, increment values\nif (existingProgress && existingProgress.userId) {\n  totalQuestions = (parseInt(existingProgress.totalQuestions) || 0) + 1;\n  correctAnswers = (parseInt(existingProgress.correctAnswers) || 0) + (isCorrect ? 1 : 0);\n  incorrectAnswers = (parseInt(existingProgress.incorrectAnswers) || 0) + (isCorrect ? 0 : 1);\n  \n  // Streak logic: increment if correct, reset if wrong\n  if (isCorrect) {\n    currentStreak = (parseInt(existingProgress.currentStreak) || 0) + 1;\n  } else {\n    currentStreak = 0;\n  }\n}\n\nreturn [{\n  json: {\n    userId: userId,\n    userName: userName,\n    totalQuestions: totalQuestions,\n    correctAnswers: correctAnswers,\n    incorrectAnswers: incorrectAnswers,\n    lastActive: data.timestamp,\n    currentStreak: currentStreak\n  }\n}];"
+      },
+      "id": "prepare-user-progress-update",
+      "name": "Prepare User Progress Update",
+      "type": "n8n-nodes-base.code",
+      "position": [1380, 1020],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "UserProgress",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userId": "={{ $json.userId }}",
+            "userName": "={{ $json.userName }}",
+            "totalQuestions": "={{ $json.totalQuestions }}",
+            "correctAnswers": "={{ $json.correctAnswers }}",
+            "incorrectAnswers": "={{ $json.incorrectAnswers }}",
+            "lastActive": "={{ $json.lastActive }}",
+            "currentStreak": "={{ $json.currentStreak }}"
+          },
+          "matchingColumns": ["userId"],
+          "schema": [
+            { "id": "userId", "displayName": "userId", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "userName", "displayName": "userName", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "totalQuestions", "displayName": "totalQuestions", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false },
+            { "id": "correctAnswers", "displayName": "correctAnswers", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false },
+            { "id": "incorrectAnswers", "displayName": "incorrectAnswers", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false },
+            { "id": "lastActive", "displayName": "lastActive", "required": false, "defaultMatch": false, "display": true, "type": "string", "readOnly": false, "removed": false },
+            { "id": "currentStreak", "displayName": "currentStreak", "required": false, "defaultMatch": false, "display": true, "type": "number", "readOnly": false, "removed": false }
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-user-progress",
+      "name": "Update User Progress",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [1600, 1020],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uWivgC2y-qJ58WGecg8QY_mkNam_CUKKLcs9avpxdro",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "UserProgress",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "userId",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-stats-data",
+      "name": "Get Stats Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [720, 780],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate Statistics Report\nconst userProgressData = $input.all();\nconst userName = $('Telegram Trigger').item.json.message.chat.first_name;\n\n// Check if user has any progress\nif (!userProgressData || userProgressData.length === 0) {\n  const noDataMessage = `📊 **Your Learning Statistics**\\n━━━━━━━━━━━━━━━━━━━\\n\\n🆕 You haven't started yet!\\n\\nType /quiz to begin your learning journey! 🚀`;\n  \n  return [{\n    json: {\n      statsMessage: noDataMessage\n    }\n  }];\n}\n\nconst userProgress = userProgressData[0].json;\n\nconst totalQuestions = parseInt(userProgress.totalQuestions) || 0;\nconst correctAnswers = parseInt(userProgress.correctAnswers) || 0;\nconst incorrectAnswers = parseInt(userProgress.incorrectAnswers) || 0;\nconst currentStreak = parseInt(userProgress.currentStreak) || 0;\n\nconst accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;\n\nlet performanceEmoji = \"📊\";\nif (accuracy >= 90) performanceEmoji = \"🏆\";\nelse if (accuracy >= 70) performanceEmoji = \"⭐\";\nelse if (accuracy >= 50) performanceEmoji = \"📈\";\n\nlet streakEmoji = \"🔥\";\nif (currentStreak >= 10) streakEmoji = \"🔥🔥🔥\";\nelse if (currentStreak >= 5) streakEmoji = \"🔥🔥\";\n\nconst statsMessage = `📊 **Your Learning Statistics**\\n━━━━━━━━━━━━━━━━━━━\\n\\n${performanceEmoji} **Performance**\\n  • Total Questions: ${totalQuestions}\\n  • Correct: ✅ ${correctAnswers}\\n  • Incorrect: ❌ ${incorrectAnswers}\\n  • Accuracy: ${accuracy}%\\n\\n${streakEmoji} **Current Streak**: ${currentStreak}\\n\\n━━━━━━━━━━━━━━━━━━━\\n\\n💡 Keep practicing to improve!\\nType /quiz to continue learning! 🚀`;\n\nreturn [{\n  json: {\n    statsMessage: statsMessage\n  }\n}];"
+      },
+      "id": "generate-stats",
+      "name": "Generate Statistics",
+      "type": "n8n-nodes-base.code",
+      "position": [940, 780],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.statsMessage }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1160, 780],
+      "id": "send-stats",
+      "name": "Send Statistics"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=⚙️ **Settings Menu**\\n\\nComing soon! Features will include:\\n\\n📝 Daily question limit\\n🎯 Difficulty level\\n📚 Word categories\\n🔔 Reminder notifications\\n\\nStay tuned! 🚀",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 940],
+      "id": "send-settings",
+      "name": "Send Settings (Placeholder)"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=🔥 **Streak Information**\\n\\nYour learning streak shows consecutive correct answers!\\n\\nCheck /stats to see your current streak.\\n\\nKeep learning to build your streak! 💪",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 1100],
+      "id": "send-streak",
+      "name": "Send Streak Info"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=⚠️ **Reset Progress**\\n\\nAre you sure you want to reset all your progress?\\n\\nThis action cannot be undone!\\n\\nTo confirm, please contact admin.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 1260],
+      "id": "send-reset-warning",
+      "name": "Send Reset Warning"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=📚 **Help - Turkish Learning Bot**\\n\\n**Available Commands:**\\n/start - Welcome message and setup\\n/quiz - Start a new question\\n/stats - View your learning statistics\\n/settings - Adjust preferences (coming soon)\\n/streak - Check your learning streak\\n/reset - Reset your progress\\n/help - Show this help message\\n\\n**How to Use:**\\n1. Type /quiz to get a question\\n2. Answer with A, B, C, or D\\n3. Get instant feedback\\n4. Keep practicing!\\n\\n**Features:**\\n✨ Smart word selection\\n📊 Progress tracking\\n🔄 Spaced repetition\\n🎯 Multiple question types\\n\\nHappy learning! 🇹🇷",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 1420],
+      "id": "send-help",
+      "name": "Send Help"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Command Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command Router": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Stats Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Settings (Placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Streak Info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Reset Warning",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Vocabulary List",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Current Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Vocabulary List": {
+      "main": [
+        [
+          {
+            "node": "Get Word History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Word History": {
+      "main": [
+        [
+          {
+            "node": "Smart Question Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smart Question Generator": {
+      "main": [
+        [
+          {
+            "node": "Send Question",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Current Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Question": {
+      "main": [
+        [
+          {
+            "node": "Validate Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Answer": {
+      "main": [
+        [
+          {
+            "node": "Send Feedback",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Word History For Update",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get User Progress For Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Word History For Update": {
+      "main": [
+        [
+          {
+            "node": "Prepare Word History Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Word History Update": {
+      "main": [
+        [
+          {
+            "node": "Update Word History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Progress For Update": {
+      "main": [
+        [
+          {
+            "node": "Prepare User Progress Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare User Progress Update": {
+      "main": [
+        [
+          {
+            "node": "Update User Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stats Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Statistics": {
+      "main": [
+        [
+          {
+            "node": "Send Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "improved-v2-fixed",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "advanced-language-learning-bot-v2"
+  },
+  "id": "AdvancedTurkishLearningBotV2",
+  "tags": ["language-learning", "turkish", "ai-tutor", "spaced-repetition", "fixed-new-users"]
+}
