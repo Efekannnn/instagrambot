@@ -1,0 +1,411 @@
+{
+  "name": "Turkish Learning Bot - SQLite Edition",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🎓 Turkish Learning Bot - SQLite Edition\n\n### ⚡ Performance:\n- No API limits!\n- 100x faster than Google Sheets\n- Unlimited reads/writes\n- Local database\n\n### 📊 Features:\n- Smart caching\n- Optimized queries\n- Real-time updates\n- Scalable for thousands of users\n\n### 🚀 Setup:\n1. Run init_database.js\n2. Configure SQLite node\n3. Activate workflow\n4. Start learning!",
+        "height": 680,
+        "width": 420
+      },
+      "id": "sticky-note-info",
+      "name": "Bot Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [2800, 80],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "updates": ["message"],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [240, 400],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "start"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/stats",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "stats"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/quiz",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "quiz"
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "help"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [460, 400],
+      "id": "command-router",
+      "name": "Command Router"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "🎓 Welcome {{ $('Telegram Trigger').item.json.message.chat.first_name }}!\n\nI'm your Turkish language tutor! 🇹🇷\n\n📚 **Commands:**\n/quiz - Start quiz\n/stats - View progress\n/help - Show help\n\n✨ **Powered by SQLite** - No limits!\n\nType /quiz to start! 🚀",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 180],
+      "id": "send-welcome",
+      "name": "Send Welcome"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT \n  v.id,\n  v.english_word,\n  v.turkish_word,\n  v.category,\n  v.difficulty,\n  COALESCE(wh.correct_count, 0) as correct_count,\n  COALESCE(wh.incorrect_count, 0) as incorrect_count,\n  COALESCE(wh.last_seen, '') as last_seen,\n  COALESCE(wh.streak, 0) as streak,\n  -- Calculate priority score inline\n  CASE \n    WHEN wh.id IS NULL THEN 150.0  -- Never seen\n    ELSE (\n      100 + \n      (COALESCE(wh.incorrect_count, 0) * 30) +\n      (CASE WHEN COALESCE(wh.streak, 0) < 3 THEN (3 - COALESCE(wh.streak, 0)) * 20 ELSE 0 END) +\n      (CASE \n        WHEN julianday('now') - julianday(wh.last_seen) < 1 THEN -40\n        WHEN julianday('now') - julianday(wh.last_seen) < 3 THEN -20\n        ELSE (julianday('now') - julianday(wh.last_seen)) * 5\n      END) +\n      (CASE \n        WHEN (COALESCE(wh.correct_count, 0) + COALESCE(wh.incorrect_count, 0)) > 0 \n        THEN (1 - (COALESCE(wh.correct_count, 0) * 1.0 / (COALESCE(wh.correct_count, 0) + COALESCE(wh.incorrect_count, 0)))) * 40\n        ELSE 50\n      END)\n    )\n  END as priority_score\nFROM vocabulary v\nLEFT JOIN word_history wh ON v.id = wh.word_id AND wh.user_id = '{{ $('Telegram Trigger').item.json.message.chat.id }}'\nORDER BY priority_score DESC\nLIMIT 30;"
+      },
+      "id": "get-vocabulary-with-priority",
+      "name": "Get Vocabulary (Prioritized)",
+      "type": "n8n-nodes-base.sqlite",
+      "position": [720, 340],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Smart Question Generator - Optimized for SQLite\nconst words = $input.all().map(item => item.json);\nconst userId = $('Telegram Trigger').item.json.message.chat.id;\nconst userName = $('Telegram Trigger').item.json.message.chat.first_name || 'User';\n\nif (words.length === 0) {\n  return [{\n    json: {\n      error: true,\n      message: \"No vocabulary found. Please run init_database.js first!\"\n    }\n  }];\n}\n\n// Words are already sorted by priority, pick from top 20%\nconst topCount = Math.max(5, Math.ceil(words.length * 0.2));\nconst topWords = words.slice(0, topCount);\n\n// Randomly select from top priority words\nconst selectedWord = topWords[Math.floor(Math.random() * topWords.length)];\n\n// Determine exercise type\nconst exerciseTypes = ['mcq_en_to_tr', 'mcq_tr_to_en'];\nconst exerciseType = exerciseTypes[Math.floor(Math.random() * exerciseTypes.length)];\n\nlet questionText, correctAnswer, options;\n\nif (exerciseType === 'mcq_en_to_tr') {\n  // English to Turkish\n  questionText = `What is the correct Turkish translation for \"${selectedWord.english_word}\"?`;\n  \n  // Get 3 incorrect Turkish options\n  const incorrectOptions = words\n    .filter(w => w.turkish_word !== selectedWord.turkish_word)\n    .sort(() => Math.random() - 0.5)\n    .slice(0, 3)\n    .map(w => w.turkish_word);\n  \n  // Combine and shuffle\n  const allOptions = [...incorrectOptions, selectedWord.turkish_word];\n  options = allOptions.sort(() => Math.random() - 0.5);\n  \n  correctAnswer = options.indexOf(selectedWord.turkish_word);\n  \n} else {\n  // Turkish to English\n  questionText = `What is the correct English translation for \"${selectedWord.turkish_word}\"?`;\n  \n  // Get 3 incorrect English options\n  const incorrectOptions = words\n    .filter(w => w.english_word !== selectedWord.english_word)\n    .sort(() => Math.random() - 0.5)\n    .slice(0, 3)\n    .map(w => w.english_word);\n  \n  // Combine and shuffle\n  const allOptions = [...incorrectOptions, selectedWord.english_word];\n  options = allOptions.sort(() => Math.random() - 0.5);\n  \n  correctAnswer = options.indexOf(selectedWord.english_word);\n}\n\nconst correctLetter = ['A', 'B', 'C', 'D'][correctAnswer];\n\nconst formattedQuestion = `${questionText}\\n\\nA) ${options[0]}\\nB) ${options[1]}\\nC) ${options[2]}\\nD) ${options[3]}\\n\\n📝 Reply with A, B, C, or D`;\n\nreturn [{\n  json: {\n    userId: userId,\n    userName: userName,\n    wordId: selectedWord.id,\n    question: questionText,\n    options: options,\n    correctAnswer: correctLetter,\n    correctIndex: correctAnswer,\n    englishWord: selectedWord.english_word,\n    turkishWord: selectedWord.turkish_word,\n    exerciseType: exerciseType,\n    priorityScore: selectedWord.priority_score,\n    formattedQuestion: formattedQuestion\n  }\n}];"
+      },
+      "id": "generate-question",
+      "name": "Generate Question",
+      "type": "n8n-nodes-base.code",
+      "position": [940, 340],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.formattedQuestion }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1160, 340],
+      "id": "send-question",
+      "name": "Send Question"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT OR REPLACE INTO current_questions \n  (user_id, word_id, question_text, correct_answer, correct_word, turkish_word, english_word, exercise_type, options, created_at)\nVALUES \n  ('{{ $json.userId }}', \n   {{ $json.wordId }}, \n   '{{ $json.question }}', \n   '{{ $json.correctAnswer }}', \n   '{{ $json.correctIndex }}', \n   '{{ $json.turkishWord }}', \n   '{{ $json.englishWord }}', \n   '{{ $json.exerciseType }}',\n   '{{ JSON.stringify($json.options) }}',\n   datetime('now'));"
+      },
+      "id": "save-current-question",
+      "name": "Save Current Question",
+      "type": "n8n-nodes-base.sqlite",
+      "position": [1160, 540],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT * FROM current_questions \nWHERE user_id = '{{ $('Telegram Trigger').item.json.message.chat.id }}'\nLIMIT 1;"
+      },
+      "id": "get-current-question",
+      "name": "Get Current Question",
+      "type": "n8n-nodes-base.sqlite",
+      "position": [720, 620],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Answer Validation and Feedback\nconst userAnswer = $('Telegram Trigger').item.json.message.text.toUpperCase().trim();\nconst questionData = $input.all();\nconst userId = $('Telegram Trigger').item.json.message.chat.id;\nconst userName = $('Telegram Trigger').item.json.message.chat.first_name || 'User';\n\n// Check if there's a current question\nif (!questionData || questionData.length === 0) {\n  return [{\n    json: {\n      isValid: false,\n      feedbackMessage: \"⚠️ No active question!\\n\\nType /quiz to start.\"\n    }\n  }];\n}\n\nconst question = questionData[0].json;\n\n// Validate answer format\nif (!['A', 'B', 'C', 'D'].includes(userAnswer)) {\n  return [{\n    json: {\n      isValid: false,\n      feedbackMessage: \"⚠️ Please answer with A, B, C, or D\"\n    }\n  }];\n}\n\nconst isCorrect = userAnswer === question.correct_answer;\nconst turkishWord = question.turkish_word;\nconst englishWord = question.english_word;\n\nlet feedbackMessage;\n\nif (isCorrect) {\n  const encouragements = [\n    \"Excellent! 🎉\",\n    \"Perfect! 🌟\",\n    \"Great job! ✨\",\n    \"Amazing! 🎊\",\n    \"Brilliant! 💫\",\n    \"Superb! 🚀\",\n    \"Outstanding! 👏\"\n  ];\n  const emoji = encouragements[Math.floor(Math.random() * encouragements.length)];\n  feedbackMessage = `${emoji}\\n\\n✅ ${turkishWord} = ${englishWord}\\n\\n🎯 Type /quiz for next question!`;\n} else {\n  feedbackMessage = `Not quite! 😅\\n\\n❌ Correct: ${question.correct_answer}\\n📚 ${turkishWord} = ${englishWord}\\n\\n💪 Type /quiz to try another!`;\n}\n\nreturn [{\n  json: {\n    isValid: true,\n    isCorrect: isCorrect,\n    feedbackMessage: feedbackMessage,\n    userId: userId,\n    userName: userName,\n    wordId: question.word_id,\n    englishWord: englishWord,\n    turkishWord: turkishWord\n  }\n}];"
+      },
+      "id": "validate-answer",
+      "name": "Validate Answer",
+      "type": "n8n-nodes-base.code",
+      "position": [940, 620],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.feedbackMessage }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1160, 620],
+      "id": "send-feedback",
+      "name": "Send Feedback"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Update or insert word history with single query\nINSERT INTO word_history \n  (user_id, word_id, english_word, turkish_word, correct_count, incorrect_count, last_seen, streak, created_at, updated_at)\nVALUES \n  ('{{ $json.userId }}',\n   {{ $json.wordId }},\n   '{{ $json.englishWord }}',\n   '{{ $json.turkishWord }}',\n   {{ $json.isCorrect ? 1 : 0 }},\n   {{ $json.isCorrect ? 0 : 1 }},\n   datetime('now'),\n   {{ $json.isCorrect ? 1 : 0 }},\n   datetime('now'),\n   datetime('now'))\nON CONFLICT(user_id, word_id) DO UPDATE SET\n  correct_count = correct_count + {{ $json.isCorrect ? 1 : 0 }},\n  incorrect_count = incorrect_count + {{ $json.isCorrect ? 0 : 1 }},\n  last_seen = datetime('now'),\n  streak = CASE \n    WHEN {{ $json.isCorrect ? 'TRUE' : 'FALSE' }} THEN streak + 1 \n    ELSE 0 \n  END,\n  updated_at = datetime('now');"
+      },
+      "id": "update-word-history",
+      "name": "Update Word History",
+      "type": "n8n-nodes-base.sqlite",
+      "position": [1380, 620],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Update or insert user progress with single query\nINSERT INTO user_progress \n  (user_id, user_name, total_questions, correct_answers, incorrect_answers, current_streak, best_streak, last_active, created_at, updated_at)\nVALUES \n  ('{{ $json.userId }}',\n   '{{ $json.userName }}',\n   1,\n   {{ $json.isCorrect ? 1 : 0 }},\n   {{ $json.isCorrect ? 0 : 1 }},\n   {{ $json.isCorrect ? 1 : 0 }},\n   {{ $json.isCorrect ? 1 : 0 }},\n   datetime('now'),\n   datetime('now'),\n   datetime('now'))\nON CONFLICT(user_id) DO UPDATE SET\n  user_name = '{{ $json.userName }}',\n  total_questions = total_questions + 1,\n  correct_answers = correct_answers + {{ $json.isCorrect ? 1 : 0 }},\n  incorrect_answers = incorrect_answers + {{ $json.isCorrect ? 0 : 1 }},\n  current_streak = CASE \n    WHEN {{ $json.isCorrect ? 'TRUE' : 'FALSE' }} THEN current_streak + 1 \n    ELSE 0 \n  END,\n  best_streak = CASE \n    WHEN {{ $json.isCorrect ? 'TRUE' : 'FALSE' }} AND (current_streak + 1) > best_streak THEN (current_streak + 1)\n    ELSE best_streak\n  END,\n  last_active = datetime('now'),\n  updated_at = datetime('now');"
+      },
+      "id": "update-user-progress",
+      "name": "Update User Progress",
+      "type": "n8n-nodes-base.sqlite",
+      "position": [1380, 820],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT \n  user_name,\n  total_questions,\n  correct_answers,\n  incorrect_answers,\n  ROUND(correct_answers * 100.0 / NULLIF(total_questions, 0), 1) as accuracy,\n  current_streak,\n  best_streak,\n  datetime(last_active, 'localtime') as last_active\nFROM user_progress\nWHERE user_id = '{{ $('Telegram Trigger').item.json.message.chat.id }}'\nLIMIT 1;"
+      },
+      "id": "get-stats",
+      "name": "Get Stats",
+      "type": "n8n-nodes-base.sqlite",
+      "position": [720, 780],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate Statistics Report\nconst statsData = $input.all();\nconst userName = $('Telegram Trigger').item.json.message.chat.first_name;\n\nif (!statsData || statsData.length === 0) {\n  return [{\n    json: {\n      statsMessage: `📊 **Statistics**\\n\\n🆕 You haven't started yet!\\n\\nType /quiz to begin! 🚀`\n    }\n  }];\n}\n\nconst stats = statsData[0].json;\nconst accuracy = parseFloat(stats.accuracy) || 0;\nconst currentStreak = parseInt(stats.current_streak) || 0;\nconst bestStreak = parseInt(stats.best_streak) || 0;\n\nlet performanceEmoji = \"📊\";\nif (accuracy >= 90) performanceEmoji = \"🏆\";\nelse if (accuracy >= 70) performanceEmoji = \"⭐\";\nelse if (accuracy >= 50) performanceEmoji = \"📈\";\n\nlet streakEmoji = \"🔥\";\nif (currentStreak >= 10) streakEmoji = \"🔥🔥🔥\";\nelse if (currentStreak >= 5) streakEmoji = \"🔥🔥\";\n\nconst message = `📊 **Your Statistics**\\n━━━━━━━━━━━━━━━━━━━\\n\\n${performanceEmoji} **Performance**\\n  • Total: ${stats.total_questions}\\n  • Correct: ✅ ${stats.correct_answers}\\n  • Wrong: ❌ ${stats.incorrect_answers}\\n  • Accuracy: ${accuracy}%\\n\\n${streakEmoji} **Streak**\\n  • Current: ${currentStreak}\\n  • Best: ${bestStreak}\\n\\n━━━━━━━━━━━━━━━━━━━\\n💡 Keep practicing! /quiz`;\n\nreturn [{\n  json: {\n    statsMessage: message\n  }\n}];"
+      },
+      "id": "format-stats",
+      "name": "Format Statistics",
+      "type": "n8n-nodes-base.code",
+      "position": [940, 780],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.statsMessage }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1160, 780],
+      "id": "send-stats",
+      "name": "Send Statistics"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "📚 **Turkish Learning Bot Help**\\n\\n**Commands:**\\n/quiz - Get a new question\\n/stats - View your progress\\n/help - Show this help\\n\\n**How it works:**\\n1. Type /quiz\\n2. Answer A, B, C, or D\\n3. Get instant feedback\\n4. Repeat and improve!\\n\\n**Features:**\\n✨ Smart word selection\\n📊 Progress tracking\\n🔥 Streak system\\n⚡ No limits (SQLite powered)\\n\\nHappy learning! 🇹🇷",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 940],
+      "id": "send-help",
+      "name": "Send Help"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Command Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command Router": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Stats",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Vocabulary (Prioritized)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Current Question",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Vocabulary (Prioritized)": {
+      "main": [
+        [
+          {
+            "node": "Generate Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Question": {
+      "main": [
+        [
+          {
+            "node": "Send Question",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Current Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Question": {
+      "main": [
+        [
+          {
+            "node": "Validate Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Answer": {
+      "main": [
+        [
+          {
+            "node": "Send Feedback",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Word History",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update User Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stats": {
+      "main": [
+        [
+          {
+            "node": "Format Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Statistics": {
+      "main": [
+        [
+          {
+            "node": "Send Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "sqlite-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "turkish-learning-bot-sqlite"
+  },
+  "id": "TurkishLearningBotSQLite",
+  "tags": ["language-learning", "turkish", "sqlite", "optimized", "no-limits"]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "turkish-learning-bot-sqlite",
+  "version": "3.0.0",
+  "description": "Turkish Language Learning Bot with SQLite database - No API limits!",
+  "main": "init_database.js",
+  "scripts": {
+    "init": "node init_database.js",
+    "migrate": "node migrate_from_sheets.js",
+    "test": "node test_database.js"
+  },
+  "keywords": [
+    "language-learning",
+    "turkish",
+    "n8n",
+    "sqlite",
+    "telegram-bot",
+    "spaced-repetition"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "google-spreadsheet": "^4.1.2",
+    "google-auth-library": "^9.6.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
