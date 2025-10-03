@@ -1,13 +1,16 @@
 USE polyglot_bot;
 
--- Ukrainian translations
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- Ukrainska ceviriler
 INSERT INTO vocabulary_translations (word_id, language_code, translation, example_sentence_en, example_sentence_translated) VALUES
 (1, 'uk', 'pryvit', 'Hello, how are you?', 'Pryvit, yak spravy?'),
-(2, 'uk', 'do pobachennya', 'Goodbye, see you tomorrow.', 'Do pobachennya, do zavtra.'),
+(2, 'uk', 'do pobachennia', 'Goodbye, see you tomorrow.', 'Do pobachennia, do zavtra.'),
 (3, 'uk', 'dyakuyu', 'Thank you very much!', 'Duzhe dyakuyu!'),
 (4, 'uk', 'bud laska', 'Please help me.', 'Bud laska, dopomozhit meni.'),
 (5, 'uk', 'tak', 'Yes, I understand.', 'Tak, ya rozumiyu.'),
-(6, 'uk', 'ni', 'No, I do not agree.', 'Ni, ya ne zgoden.'),
+(6, 'uk', 'ni', 'No, I do not agree.', 'Ni, ya ne zghoden.'),
 (7, 'uk', 'voda', 'I need water.', 'Meni potribna voda.'),
 (8, 'uk', 'yizha', 'The food is delicious.', 'Yizha smachna.'),
 (9, 'uk', 'budynok', 'This is my house.', 'Tse miy budynok.'),
@@ -21,9 +24,9 @@ INSERT INTO vocabulary_translations (word_id, language_code, translation, exampl
 (17, 'uk', 'sestra', 'My sister is 15 years old.', 'Moyiy sestri 15 rokiv.'),
 (18, 'uk', 'brat', 'I have one brother.', 'U mene odyn brat.'),
 (19, 'uk', 'druh', 'He is my friend.', 'Vin miy druh.'),
-(20, 'uk', 'chervonyy', 'I like red color.', 'Meni podobayetsya chervonyy kolir.'),
+(20, 'uk', 'chervonyi', 'I like red color.', 'Meni podobayetsya chervonyi kolir.'),
 (21, 'uk', 'syniy', 'The sky is blue.', 'Nebo synye.'),
-(22, 'uk', 'zelenyy', 'Green is the color of nature.', 'Zelenyy - tse kolir pryrody.'),
+(22, 'uk', 'zelenyi', 'Green is the color of nature.', 'Zelenyi tse kolir pryrody.'),
 (23, 'uk', 'odyn', 'I have one apple.', 'U mene odne yabluko.'),
 (24, 'uk', 'dva', 'Two cats are playing.', 'Dva koty hrayutsya.'),
 (25, 'uk', 'try', 'I need three books.', 'Meni potribno try knyhy.'),

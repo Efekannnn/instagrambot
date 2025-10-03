@@ -1,6 +1,9 @@
 USE polyglot_bot;
 
--- English words
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- Ingilizce kelimeler
 INSERT INTO vocabulary (english_word, word_type, difficulty_level, pronunciation) VALUES
 ('hello', 'phrase', 'beginner', 'helow'),
 ('goodbye', 'phrase', 'beginner', 'gudbay'),
@@ -15,8 +18,8 @@ INSERT INTO vocabulary (english_word, word_type, difficulty_level, pronunciation
 ('table', 'noun', 'beginner', 'teybl'),
 ('chair', 'noun', 'beginner', 'cher'),
 ('door', 'noun', 'beginner', 'dor'),
-('window', 'noun', 'beginner', 'window'),
-('mother', 'noun', 'beginner', 'mudher'),
+('window', 'noun', 'beginner', 'windou'),
+('mother', 'noun', 'beginner', 'madher'),
 ('father', 'noun', 'beginner', 'fadher'),
 ('sister', 'noun', 'beginner', 'sister'),
 ('brother', 'noun', 'beginner', 'bradher'),

@@ -1,9 +1,12 @@
 USE polyglot_bot;
 
--- Turkish translations
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- Turkce ceviriler
 INSERT INTO vocabulary_translations (word_id, language_code, translation, example_sentence_en, example_sentence_translated) VALUES
 (1, 'tr', 'merhaba', 'Hello, how are you?', 'Merhaba, nasilsin?'),
-(2, 'tr', 'gule gule, hosca kal', 'Goodbye, see you tomorrow.', 'Hosca kal, yarin gorusuruz.'),
+(2, 'tr', 'gule gule', 'Goodbye, see you tomorrow.', 'Gule gule, yarin gorusuruz.'),
 (3, 'tr', 'tesekkur ederim', 'Thank you very much!', 'Cok tesekkur ederim!'),
 (4, 'tr', 'lutfen', 'Please help me.', 'Lutfen bana yardim et.'),
 (5, 'tr', 'evet', 'Yes, I understand.', 'Evet, anliyorum.'),

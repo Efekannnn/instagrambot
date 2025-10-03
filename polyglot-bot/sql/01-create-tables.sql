@@ -1,6 +1,6 @@
 USE polyglot_bot;
 
--- Languages table
+-- Languages tablosu
 CREATE TABLE IF NOT EXISTS languages (
     language_id INT AUTO_INCREMENT PRIMARY KEY,
     language_code VARCHAR(5) UNIQUE NOT NULL,
@@ -10,14 +10,14 @@ CREATE TABLE IF NOT EXISTS languages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Insert languages
+-- Dilleri ekle
 INSERT INTO languages (language_code, language_name, flag_emoji) VALUES
 ('tr', 'Turkce', 'TR'),
 ('uk', 'Ukrainska', 'UK'),
 ('en', 'English', 'EN')
 ON DUPLICATE KEY UPDATE language_name=language_name;
 
--- Users table
+-- Users tablosu
 CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     telegram_id BIGINT UNIQUE NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS users (
     FOREIGN KEY (learning_language) REFERENCES languages(language_code)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Vocabulary table
+-- Vocabulary tablosu
 CREATE TABLE IF NOT EXISTS vocabulary (
     word_id INT AUTO_INCREMENT PRIMARY KEY,
     english_word VARCHAR(255) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS vocabulary (
     INDEX idx_english (english_word)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Vocabulary translations table
+-- Vocabulary translations tablosu
 CREATE TABLE IF NOT EXISTS vocabulary_translations (
     translation_id INT AUTO_INCREMENT PRIMARY KEY,
     word_id INT NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS vocabulary_translations (
     INDEX idx_word_lang (word_id, language_code)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- User progress table
+-- User progress tablosu
 CREATE TABLE IF NOT EXISTS user_progress (
     progress_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS user_progress (
     INDEX idx_user_learned (user_id, learned)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Quiz history table
+-- Quiz history tablosu
 CREATE TABLE IF NOT EXISTS quiz_history (
     quiz_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS quiz_history (
     INDEX idx_user_date (user_id, completed_at)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Daily challenges table
+-- Daily challenges tablosu
 CREATE TABLE IF NOT EXISTS daily_challenges (
     challenge_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS daily_challenges (
     INDEX idx_date (challenge_date)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- UI texts table
+-- UI texts tablosu
 CREATE TABLE IF NOT EXISTS ui_texts (
     text_id INT AUTO_INCREMENT PRIMARY KEY,
     text_key VARCHAR(100) NOT NULL,
