@@ -1,0 +1,35 @@
+USE polyglot_bot;
+
+-- Ukraynaca çeviriler
+INSERT INTO vocabulary_translations (word_id, language_code, translation, example_sentence_en, example_sentence_translated) VALUES
+(1, 'uk', 'привіт', 'Hello, how are you?', 'Привіт, як справи?'),
+(2, 'uk', 'до побачення', 'Goodbye, see you tomorrow.', 'До побачення, до завтра.'),
+(3, 'uk', 'дякую', 'Thank you very much!', 'Дуже дякую!'),
+(4, 'uk', 'будь ласка', 'Please help me.', 'Будь ласка, допоможіть мені.'),
+(5, 'uk', 'так', 'Yes, I understand.', 'Так, я розумію.'),
+(6, 'uk', 'ні', 'No, I do not agree.', 'Ні, я не згоден.'),
+(7, 'uk', 'вода', 'I need water.', 'Мені потрібна вода.'),
+(8, 'uk', 'їжа', 'The food is delicious.', 'Їжа смачна.'),
+(9, 'uk', 'будинок', 'This is my house.', 'Це мій будинок.'),
+(10, 'uk', 'книга', 'I am reading a book.', 'Я читаю книгу.'),
+(11, 'uk', 'стіл', 'The book is on the table.', 'Книга на столі.'),
+(12, 'uk', 'стілець', 'Please sit on the chair.', 'Будь ласка, сядьте на стілець.'),
+(13, 'uk', 'двері', 'Close the door, please.', 'Будь ласка, зачиніть двері.'),
+(14, 'uk', 'вікно', 'Open the window.', 'Відкрийте вікно.'),
+(15, 'uk', 'мати', 'My mother is a teacher.', 'Моя мати вчителька.'),
+(16, 'uk', 'батько', 'My father works in a bank.', 'Мій батько працює в банку.'),
+(17, 'uk', 'сестра', 'My sister is 15 years old.', 'Моїй сестрі 15 років.'),
+(18, 'uk', 'брат', 'I have one brother.', 'У мене один брат.'),
+(19, 'uk', 'друг', 'He is my friend.', 'Він мій друг.'),
+(20, 'uk', 'червоний', 'I like red color.', 'Мені подобається червоний колір.'),
+(21, 'uk', 'синій', 'The sky is blue.', 'Небо синє.'),
+(22, 'uk', 'зелений', 'Green is the color of nature.', 'Зелений - це колір природи.'),
+(23, 'uk', 'один', 'I have one apple.', 'У мене одне яблуко.'),
+(24, 'uk', 'два', 'Two cats are playing.', 'Два коти граються.'),
+(25, 'uk', 'три', 'I need three books.', 'Мені потрібно три книги.'),
+(26, 'uk', 'йти', 'I go to school.', 'Я йду до школи.'),
+(27, 'uk', 'приходити', 'Please come here.', 'Будь ласка, прийди сюди.'),
+(28, 'uk', 'їсти', 'I eat breakfast.', 'Я їм сніданок.'),
+(29, 'uk', 'пити', 'I drink coffee.', 'Я п\'ю каву.'),
+(30, 'uk', 'спати', 'I sleep 8 hours.', 'Я сплю 8 годин.')
+ON DUPLICATE KEY UPDATE translation=VALUES(translation);

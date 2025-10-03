@@ -1,0 +1,35 @@
+USE polyglot_bot;
+
+-- İngilizce kelimeler
+INSERT INTO vocabulary (english_word, word_type, difficulty_level, pronunciation) VALUES
+('hello', 'phrase', 'beginner', 'həˈləʊ'),
+('goodbye', 'phrase', 'beginner', 'ɡʊdˈbaɪ'),
+('thank you', 'phrase', 'beginner', 'θæŋk juː'),
+('please', 'adverb', 'beginner', 'pliːz'),
+('yes', 'adverb', 'beginner', 'jes'),
+('no', 'adverb', 'beginner', 'nəʊ'),
+('water', 'noun', 'beginner', 'ˈwɔːtə'),
+('food', 'noun', 'beginner', 'fuːd'),
+('house', 'noun', 'beginner', 'haʊs'),
+('book', 'noun', 'beginner', 'bʊk'),
+('table', 'noun', 'beginner', 'ˈteɪbl'),
+('chair', 'noun', 'beginner', 'tʃeə'),
+('door', 'noun', 'beginner', 'dɔː'),
+('window', 'noun', 'beginner', 'ˈwɪndəʊ'),
+('mother', 'noun', 'beginner', 'ˈmʌðə'),
+('father', 'noun', 'beginner', 'ˈfɑːðə'),
+('sister', 'noun', 'beginner', 'ˈsɪstə'),
+('brother', 'noun', 'beginner', 'ˈbrʌðə'),
+('friend', 'noun', 'beginner', 'frend'),
+('red', 'adjective', 'beginner', 'red'),
+('blue', 'adjective', 'beginner', 'bluː'),
+('green', 'adjective', 'beginner', 'ɡriːn'),
+('one', 'noun', 'beginner', 'wʌn'),
+('two', 'noun', 'beginner', 'tuː'),
+('three', 'noun', 'beginner', 'θriː'),
+('go', 'verb', 'beginner', 'ɡəʊ'),
+('come', 'verb', 'beginner', 'kʌm'),
+('eat', 'verb', 'beginner', 'iːt'),
+('drink', 'verb', 'beginner', 'drɪŋk'),
+('sleep', 'verb', 'beginner', 'sliːp')
+ON DUPLICATE KEY UPDATE english_word=VALUES(english_word);
