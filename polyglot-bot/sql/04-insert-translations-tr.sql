@@ -1,0 +1,38 @@
+USE polyglot_bot;
+
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- Turkce ceviriler
+INSERT INTO vocabulary_translations (word_id, language_code, translation, example_sentence_en, example_sentence_translated) VALUES
+(1, 'tr', 'merhaba', 'Hello, how are you?', 'Merhaba, nasilsin?'),
+(2, 'tr', 'gule gule', 'Goodbye, see you tomorrow.', 'Gule gule, yarin gorusuruz.'),
+(3, 'tr', 'tesekkur ederim', 'Thank you very much!', 'Cok tesekkur ederim!'),
+(4, 'tr', 'lutfen', 'Please help me.', 'Lutfen bana yardim et.'),
+(5, 'tr', 'evet', 'Yes, I understand.', 'Evet, anliyorum.'),
+(6, 'tr', 'hayir', 'No, I do not agree.', 'Hayir, katilmiyorum.'),
+(7, 'tr', 'su', 'I need water.', 'Suya ihtiyacim var.'),
+(8, 'tr', 'yemek', 'The food is delicious.', 'Yemek lezzetli.'),
+(9, 'tr', 'ev', 'This is my house.', 'Bu benim evim.'),
+(10, 'tr', 'kitap', 'I am reading a book.', 'Kitap okuyorum.'),
+(11, 'tr', 'masa', 'The book is on the table.', 'Kitap masanin uzerinde.'),
+(12, 'tr', 'sandalye', 'Please sit on the chair.', 'Lutfen sandalyeye otur.'),
+(13, 'tr', 'kapi', 'Close the door, please.', 'Lutfen kapiyi kapat.'),
+(14, 'tr', 'pencere', 'Open the window.', 'Pencereyi ac.'),
+(15, 'tr', 'anne', 'My mother is a teacher.', 'Annem ogretmen.'),
+(16, 'tr', 'baba', 'My father works in a bank.', 'Babam bankada calisiyor.'),
+(17, 'tr', 'kiz kardes', 'My sister is 15 years old.', 'Kiz kardesim 15 yasinda.'),
+(18, 'tr', 'erkek kardes', 'I have one brother.', 'Bir erkek kardesim var.'),
+(19, 'tr', 'arkadas', 'He is my friend.', 'O benim arkadasim.'),
+(20, 'tr', 'kirmizi', 'I like red color.', 'Kirmizi rengi seviyorum.'),
+(21, 'tr', 'mavi', 'The sky is blue.', 'Gokyuzu mavi.'),
+(22, 'tr', 'yesil', 'Green is the color of nature.', 'Yesil, doganin rengidir.'),
+(23, 'tr', 'bir', 'I have one apple.', 'Bir elmam var.'),
+(24, 'tr', 'iki', 'Two cats are playing.', 'Iki kedi oynuyor.'),
+(25, 'tr', 'uc', 'I need three books.', 'Uc kitaba ihtiyacim var.'),
+(26, 'tr', 'gitmek', 'I go to school.', 'Okula gidiyorum.'),
+(27, 'tr', 'gelmek', 'Please come here.', 'Lutfen buraya gel.'),
+(28, 'tr', 'yemek', 'I eat breakfast.', 'Kahvalti yapiyorum.'),
+(29, 'tr', 'icmek', 'I drink coffee.', 'Kahve iciyorum.'),
+(30, 'tr', 'uyumak', 'I sleep 8 hours.', '8 saat uyuyorum.')
+ON DUPLICATE KEY UPDATE translation=VALUES(translation);

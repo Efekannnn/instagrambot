@@ -1,0 +1,38 @@
+USE polyglot_bot;
+
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- Ingilizce kelimeler
+INSERT INTO vocabulary (english_word, word_type, difficulty_level, pronunciation) VALUES
+('hello', 'phrase', 'beginner', 'helow'),
+('goodbye', 'phrase', 'beginner', 'gudbay'),
+('thank you', 'phrase', 'beginner', 'thank yu'),
+('please', 'adverb', 'beginner', 'pliiz'),
+('yes', 'adverb', 'beginner', 'yes'),
+('no', 'adverb', 'beginner', 'now'),
+('water', 'noun', 'beginner', 'woter'),
+('food', 'noun', 'beginner', 'fuud'),
+('house', 'noun', 'beginner', 'haus'),
+('book', 'noun', 'beginner', 'buk'),
+('table', 'noun', 'beginner', 'teybl'),
+('chair', 'noun', 'beginner', 'cher'),
+('door', 'noun', 'beginner', 'dor'),
+('window', 'noun', 'beginner', 'windou'),
+('mother', 'noun', 'beginner', 'madher'),
+('father', 'noun', 'beginner', 'fadher'),
+('sister', 'noun', 'beginner', 'sister'),
+('brother', 'noun', 'beginner', 'bradher'),
+('friend', 'noun', 'beginner', 'frend'),
+('red', 'adjective', 'beginner', 'red'),
+('blue', 'adjective', 'beginner', 'blu'),
+('green', 'adjective', 'beginner', 'griin'),
+('one', 'noun', 'beginner', 'wan'),
+('two', 'noun', 'beginner', 'tuu'),
+('three', 'noun', 'beginner', 'thrii'),
+('go', 'verb', 'beginner', 'gow'),
+('come', 'verb', 'beginner', 'kam'),
+('eat', 'verb', 'beginner', 'iit'),
+('drink', 'verb', 'beginner', 'drink'),
+('sleep', 'verb', 'beginner', 'sliip')
+ON DUPLICATE KEY UPDATE english_word=VALUES(english_word);

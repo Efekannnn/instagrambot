@@ -1,0 +1,38 @@
+USE polyglot_bot;
+
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- Ukrainska ceviriler
+INSERT INTO vocabulary_translations (word_id, language_code, translation, example_sentence_en, example_sentence_translated) VALUES
+(1, 'uk', 'pryvit', 'Hello, how are you?', 'Pryvit, yak spravy?'),
+(2, 'uk', 'do pobachennia', 'Goodbye, see you tomorrow.', 'Do pobachennia, do zavtra.'),
+(3, 'uk', 'dyakuyu', 'Thank you very much!', 'Duzhe dyakuyu!'),
+(4, 'uk', 'bud laska', 'Please help me.', 'Bud laska, dopomozhit meni.'),
+(5, 'uk', 'tak', 'Yes, I understand.', 'Tak, ya rozumiyu.'),
+(6, 'uk', 'ni', 'No, I do not agree.', 'Ni, ya ne zghoden.'),
+(7, 'uk', 'voda', 'I need water.', 'Meni potribna voda.'),
+(8, 'uk', 'yizha', 'The food is delicious.', 'Yizha smachna.'),
+(9, 'uk', 'budynok', 'This is my house.', 'Tse miy budynok.'),
+(10, 'uk', 'knyha', 'I am reading a book.', 'Ya chytayu knyhu.'),
+(11, 'uk', 'stil', 'The book is on the table.', 'Knyha na stoli.'),
+(12, 'uk', 'stilets', 'Please sit on the chair.', 'Bud laska, syadte na stilets.'),
+(13, 'uk', 'dveri', 'Close the door, please.', 'Bud laska, zachinit dveri.'),
+(14, 'uk', 'vikno', 'Open the window.', 'Vidkriyte vikno.'),
+(15, 'uk', 'maty', 'My mother is a teacher.', 'Moya maty vchytelka.'),
+(16, 'uk', 'batko', 'My father works in a bank.', 'Miy batko pratsyuye v banku.'),
+(17, 'uk', 'sestra', 'My sister is 15 years old.', 'Moyiy sestri 15 rokiv.'),
+(18, 'uk', 'brat', 'I have one brother.', 'U mene odyn brat.'),
+(19, 'uk', 'druh', 'He is my friend.', 'Vin miy druh.'),
+(20, 'uk', 'chervonyi', 'I like red color.', 'Meni podobayetsya chervonyi kolir.'),
+(21, 'uk', 'syniy', 'The sky is blue.', 'Nebo synye.'),
+(22, 'uk', 'zelenyi', 'Green is the color of nature.', 'Zelenyi tse kolir pryrody.'),
+(23, 'uk', 'odyn', 'I have one apple.', 'U mene odne yabluko.'),
+(24, 'uk', 'dva', 'Two cats are playing.', 'Dva koty hrayutsya.'),
+(25, 'uk', 'try', 'I need three books.', 'Meni potribno try knyhy.'),
+(26, 'uk', 'yty', 'I go to school.', 'Ya ydu do shkoly.'),
+(27, 'uk', 'prykhodyty', 'Please come here.', 'Bud laska, pryydy syudy.'),
+(28, 'uk', 'yisty', 'I eat breakfast.', 'Ya yim snidanok.'),
+(29, 'uk', 'pyty', 'I drink coffee.', 'Ya pyu kavu.'),
+(30, 'uk', 'spaty', 'I sleep 8 hours.', 'Ya splyu 8 hodyn.')
+ON DUPLICATE KEY UPDATE translation=VALUES(translation);
