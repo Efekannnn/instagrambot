@@ -1,58 +1,58 @@
 USE polyglot_bot;
 
--- UI Metinleri
+-- UI texts
 INSERT INTO ui_texts (text_key, language_code, text_value) VALUES
--- Hoş geldin mesajları
-('welcome_message', 'tr', '🎉 Hoş geldin {name}!\n\nİngilizce öğrenme botuna hoş geldin!\n\nKullanabileceğin komutlar:\n/learn - Yeni kelime öğren\n/quiz - Quiz yap\n/stats - İstatistiklerini gör\n/language - Dil değiştir\n/help - Yardım\n\nHadi başlayalım! 🚀'),
-('welcome_message', 'uk', '🎉 Вітаємо {name}!\n\nЛаскаво просимо до бота для вивчення англійської!\n\nДоступні команди:\n/learn - Вивчити нове слово\n/quiz - Пройти тест\n/stats - Переглянути статистику\n/language - Змінити мову\n/help - Допомога\n\nПочнімо! 🚀'),
+-- Welcome messages
+('welcome_message', 'tr', 'Hos geldin {name}! Ingilizce ogrenme botuna hos geldin! /learn - Yeni kelime ogren /quiz - Quiz yap /stats - Istatistiklerini gor /language - Dil degistir /help - Yardim'),
+('welcome_message', 'uk', 'Vitaemo {name}! Laskavo prosymo do bota! /learn - Vyvchyty nove slovo /quiz - Proyty test /stats - Pereglyanuti statystyku'),
 
--- Dil seçimi
-('choose_language', 'tr', 'Lütfen ana dilinizi seçin:'),
-('choose_language', 'uk', 'Будь ласка, оберіть вашу рідну мову:'),
+-- Language selection
+('choose_language', 'tr', 'Lutfen ana dilinizi secin:'),
+('choose_language', 'uk', 'Bud laska oberit vashu ridnu movu:'),
 
--- Kelime öğrenme
-('new_word', 'tr', '📚 Yeni Kelime:'),
-('new_word', 'uk', '📚 Нове слово:'),
-('translation', 'tr', 'Çeviri'),
-('translation', 'uk', 'Переклад'),
-('example', 'tr', '📝 Örnek:'),
-('example', 'uk', '📝 Приклад:'),
-('mark_learned', 'tr', 'Öğrendin mi? ✅'),
-('mark_learned', 'uk', 'Вивчили? ✅'),
+-- Word learning
+('new_word', 'tr', 'Yeni Kelime:'),
+('new_word', 'uk', 'Nove slovo:'),
+('translation', 'tr', 'Ceviri'),
+('translation', 'uk', 'Pereklad'),
+('example', 'tr', 'Ornek:'),
+('example', 'uk', 'Pryklad:'),
+('mark_learned', 'tr', 'Ogrendin mi?'),
+('mark_learned', 'uk', 'Vyvchyly?'),
 
 -- Quiz
-('quiz_start', 'tr', '🎯 Quiz başlıyor! {count} soru gelecek.'),
-('quiz_start', 'uk', '🎯 Тест починається! Буде {count} питань.'),
+('quiz_start', 'tr', 'Quiz basliyor! {count} soru gelecek.'),
+('quiz_start', 'uk', 'Test pochynaetsya! Bude {count} pytan.'),
 
--- İstatistikler
-('stats_title', 'tr', '📊 İstatistikleriniz:'),
-('stats_title', 'uk', '📊 Ваша статистика:'),
-('stats_learned', 'tr', '✅ Öğrenilen Kelimeler:'),
-('stats_learned', 'uk', '✅ Вивчені слова:'),
-('stats_total', 'tr', '👀 Görülen Kelimeler:'),
-('stats_total', 'uk', '👀 Переглянуті слова:'),
-('stats_score', 'tr', '🏆 Toplam Puan:'),
-('stats_score', 'uk', '🏆 Загальний рахунок:'),
-('stats_level', 'tr', '📈 Seviye:'),
-('stats_level', 'uk', '📈 Рівень:'),
-('stats_streak', 'tr', '🔥 Streak:'),
-('stats_streak', 'uk', '🔥 Серія:'),
-('stats_days', 'tr', 'gün'),
-('stats_days', 'uk', 'днів'),
-('stats_congrats', 'tr', 'Harika gidiyorsun! 💪'),
-('stats_congrats', 'uk', 'Чудова робота! 💪'),
+-- Statistics
+('stats_title', 'tr', 'Istatistikleriniz:'),
+('stats_title', 'uk', 'Vasha statystyka:'),
+('stats_learned', 'tr', 'Ogrenilen Kelimeler:'),
+('stats_learned', 'uk', 'Vyvcheni slova:'),
+('stats_total', 'tr', 'Gorulen Kelimeler:'),
+('stats_total', 'uk', 'Pereglyanuti slova:'),
+('stats_score', 'tr', 'Toplam Puan:'),
+('stats_score', 'uk', 'Zagalnyy rakhunok:'),
+('stats_level', 'tr', 'Seviye:'),
+('stats_level', 'uk', 'Riven:'),
+('stats_streak', 'tr', 'Streak:'),
+('stats_streak', 'uk', 'Seriya:'),
+('stats_days', 'tr', 'gun'),
+('stats_days', 'uk', 'dniv'),
+('stats_congrats', 'tr', 'Harika gidiyorsun!'),
+('stats_congrats', 'uk', 'Chudova robota!'),
 
--- Seviyeler
-('level_beginner', 'tr', 'Başlangıç'),
-('level_beginner', 'uk', 'Початковий'),
+-- Levels
+('level_beginner', 'tr', 'Baslangic'),
+('level_beginner', 'uk', 'Pochatkovyy'),
 ('level_intermediate', 'tr', 'Orta'),
-('level_intermediate', 'uk', 'Середній'),
-('level_advanced', 'tr', 'İleri'),
-('level_advanced', 'uk', 'Просунутий'),
+('level_intermediate', 'uk', 'Seredniy'),
+('level_advanced', 'tr', 'Ileri'),
+('level_advanced', 'uk', 'Prosunutyy'),
 
--- Hatalar
-('no_words_left', 'tr', 'Seviyene uygun yeni kelime kalmadı! 🎉'),
-('no_words_left', 'uk', 'Немає нових слів для вашого рівня! 🎉'),
-('no_words_for_quiz', 'tr', 'Quiz için yeterli kelime yok. Önce kelime öğrenmelisin!'),
-('no_words_for_quiz', 'uk', 'Недостатньо слів для тесту. Спочатку вивчіть більше слів!')
+-- Errors
+('no_words_left', 'tr', 'Seviyene uygun yeni kelime kalmadi!'),
+('no_words_left', 'uk', 'Nemaye novykh sliv dlya vashoho rivnya!'),
+('no_words_for_quiz', 'tr', 'Quiz icin yeterli kelime yok. Once kelime ogrenmelisin!'),
+('no_words_for_quiz', 'uk', 'Nedostatno sliv dlya testu. Spochatku vivchit bilshe sliv!')
 ON DUPLICATE KEY UPDATE text_value=VALUES(text_value);
